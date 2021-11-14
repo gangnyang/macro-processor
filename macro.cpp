@@ -1,5 +1,5 @@
 /*
-2020111983 Àüµ¿¿ø ¸ÅÅ©·Î ÇÁ·Î¼¼¼­ ¸ŞÀÎ ÆÄÀÏ
+ë§¤í¬ë¡œ í”„ë¡œì„¸ì„œ ë©”ì¸ íŒŒì¼
 */
 #define _CRT_SECURE_NO_WARNINGS
 #include "table.cpp"
@@ -25,28 +25,28 @@ void substitute(string& s);
 void setval(string s1, string s2);
 bool condition(string s);
 
-int index = 0; // ÀĞ´Â ÁÙ ¼ö 
-bool expanding = false; // È®Àå ÁßÀÎÁö
-bool set = false; // set ±¸¹®ÀÎÁö
+int index = 0; // ì½ëŠ” ì¤„ ìˆ˜ 
+bool expanding = false; // í™•ì¥ ì¤‘ì¸ì§€
+bool set = false; // set êµ¬ë¬¸ì¸ì§€
 ifstream inpf;
 ofstream outpf;
-string line; // Ãâ·ÂÇÒ ¹®Àå
-string element[MAXARG]; // keyword ¹æ½ÄÀ» À§ÇÔ
-string replacement[MAXARG]; // keyword ¹æ½ÄÀ» À§ÇÔ
+string line; // ì¶œë ¥í•  ë¬¸ì¥
+string element[MAXARG]; // keyword ë°©ì‹ì„ ìœ„í•¨
+string replacement[MAXARG]; // keyword ë°©ì‹ì„ ìœ„í•¨
 string label[MAXLINE];
 string opcode[MAXLINE];
 string operand[MAXLINE];
-string backup[MAXLINE]; // operand¸¦ unique label·Î ±³Ã¼ÇÏ±â À§ÇÑ º¯¼ö
+string backup[MAXLINE]; // operandë¥¼ unique labelë¡œ êµì²´í•˜ê¸° ìœ„í•œ ë³€ìˆ˜
 
 NAMTAB* namta[MAXSIZE];
 DEFTAB defta;
 ARGTAB argta[MAXARG];
 
-int backupindex = 0; // backupº¯¼öÀÇ index
-int defindex = 0; // deftab¿¡ ³Ö±â À§ÇÑ index
-int argindex = 0; // argtab¿¡ ³Ö´Â index
-int argend=0; // keyword ¹æ½ÄÀ» À§ÇÔ
-int macronum = 0; // ÇöÀç ¸î ¹øÂ° macroÀÎÁö(nested X)
+int backupindex = 0; // backupë³€ìˆ˜ì˜ index
+int defindex = 0; // deftabì— ë„£ê¸° ìœ„í•œ index
+int argindex = 0; // argtabì— ë„£ëŠ” index
+int argend=0; // keyword ë°©ì‹ì„ ìœ„í•¨
+int macronum = 0; // í˜„ì¬ ëª‡ ë²ˆì§¸ macroì¸ì§€(nested X)
 
 int main(int argc, char** argv) {
 
@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
 		cout << "File Error!" << endl;
 		exit(100);
 	}
-	outpf.open("output"); // Ãâ·ÂÆÄÀÏ
+	outpf.open("output"); // ì¶œë ¥íŒŒì¼
 	while (opcode[index] != "end") {
 		mgetline(index);
 		processline();
@@ -67,9 +67,9 @@ int main(int argc, char** argv) {
 	outpf.close();
 }
 
-int hashing(string s) {//ÇØ½Ã°ªÀ» ¾ò´Â ÇÔ¼ö
+int hashing(string s) {//í•´ì‹œê°’ì„ ì–»ëŠ” í•¨ìˆ˜
 	int hash = 0;
-	const char* k = s.c_str();//string¿¡¼­ char·Î º¯È¯ÇÏ¿© ÇØ½Ã°ªÀ» ¾ò´Â´Ù
+	const char* k = s.c_str();//stringì—ì„œ charë¡œ ë³€í™˜í•˜ì—¬ í•´ì‹œê°’ì„ ì–»ëŠ”ë‹¤
 	while (*k != NULL) {
 		hash = hash + (int)(*k);
 		k++;
@@ -77,7 +77,7 @@ int hashing(string s) {//ÇØ½Ã°ªÀ» ¾ò´Â ÇÔ¼ö
 	return hash % MAXSIZE;
 }
 
-void insertnam(string nam) { // namtab¿¡ name°ªÀ» ³Ö´Â ÇÔ¼ö
+void insertnam(string nam) { // namtabì— nameê°’ì„ ë„£ëŠ” í•¨ìˆ˜
 	int index = hashing(nam);
 	NAMTAB* newtab = new NAMTAB;
 	newtab->setname(nam);
@@ -93,7 +93,7 @@ void insertnam(string nam) { // namtab¿¡ name°ªÀ» ³Ö´Â ÇÔ¼ö
 	}
 }
 
-void insertindex(string nam, int s, int e) { // namtab¿¡ nameÀ» ´ëÁ¶ÇØ¼­ startindex¿Í endindex »ğÀÔ
+void insertindex(string nam, int s, int e) { // namtabì— nameì„ ëŒ€ì¡°í•´ì„œ startindexì™€ endindex ì‚½ì…
 	int index = hashing(nam);
 	if (namta[index]->name == nam) {
 		namta[index]->setindex(s, e);
@@ -108,44 +108,44 @@ void insertindex(string nam, int s, int e) { // namtab¿¡ nameÀ» ´ëÁ¶ÇØ¼­ startin
 	}
 }
 
-bool findnam(string nam, int& s, int& e) {//NAMTAB¿¡ Á¸ÀçÇÏ´ÂÁö È®ÀÎ
-	int index = hashing(nam);//ÇØ½Ã°ªÀ» ±¸ÇÏ°í
+bool findnam(string nam, int& s, int& e) {//NAMTABì— ì¡´ì¬í•˜ëŠ”ì§€ í™•ì¸
+	int index = hashing(nam);//í•´ì‹œê°’ì„ êµ¬í•˜ê³ 
 	NAMTAB* cursor = namta[index];
 	while (cursor != NULL) {
-		if (cursor->name == nam) {//name Á¸Àç ½Ã true ¹İÈ¯
+		if (cursor->name == nam) {//name ì¡´ì¬ ì‹œ true ë°˜í™˜
 			s = cursor->startindex;
 			e = cursor->endindex;
 			return true;
 		}
-		cursor = cursor->next;// ´Ù¸¦ °æ¿ì ´ÙÀ½ ÁÖ¼Ò·Î ÀÌµ¿
+		cursor = cursor->next;// ë‹¤ë¥¼ ê²½ìš° ë‹¤ìŒ ì£¼ì†Œë¡œ ì´ë™
 	}
-	return false; //¾øÀ» °æ¿ì false ¹İÈ¯
+	return false; //ì—†ì„ ê²½ìš° false ë°˜í™˜
 }
 
-void setargtab(string s) { // argtab¿¡ argument¸¦ ³Ö´Â ÇÔ¼ö
+void setargtab(string s) { // argtabì— argumentë¥¼ ë„£ëŠ” í•¨ìˆ˜
 	istringstream iss(s);
 	int i = 0;
 	string temp1;
 	string temp2;
-	if (s.find("=") == string::npos) { // position ¹æ½ÄÀÏ °æ¿ì
+	if (s.find("=") == string::npos) { // position ë°©ì‹ì¼ ê²½ìš°
 		while (getline(iss, element[i], ',')) {
 			argta[argindex].setarg(element[i++]);
 			argindex++;
 		}
 	}
-	else { // keyword ¹æ½ÄÀÏ °æ¿ì
+	else { // keyword ë°©ì‹ì¼ ê²½ìš°
 		while (getline(iss, element[i], ',')) {
 			temp1 = "";
 			temp2 = "";
 			temp1 = element[i].substr(0, element[i].find("="));
-			if (element[i].back() != '=') { // = µÚ¿¡ ÀÎ¼ö°¡ ÀÖ´Â °æ¿ì value·Î ¼³Á¤
+			if (element[i].back() != '=') { // = ë’¤ì— ì¸ìˆ˜ê°€ ìˆëŠ” ê²½ìš° valueë¡œ ì„¤ì •
 				temp2 = element[i].substr(element[i].find("=") + 1);
 				argta[argindex].setarg(temp1);
 				argta[argindex].setvalue(temp2);
 				i++;
 				argindex++;
 			}
-			else { // = ·Î ³¡³¯ °æ¿ì argument¸¸ set
+			else { // = ë¡œ ëë‚  ê²½ìš° argumentë§Œ set
 				argta[argindex].setarg(temp1);
 				argta[argindex].setvalue(" ");
 				i++;
@@ -156,13 +156,13 @@ void setargtab(string s) { // argtab¿¡ argument¸¦ ³Ö´Â ÇÔ¼ö
 	argend = argindex;
 }
 
-void setargvalue(string s) { // argtab¿¡ value¸¦ ³Ö´Â ÇÔ¼ö
+void setargvalue(string s) { // argtabì— valueë¥¼ ë„£ëŠ” í•¨ìˆ˜
 	istringstream iss(s);
 	int i=0, j=0;
 	string temp;
 	string temp1;
 	string temp2;
-	if (s.find("=") == string::npos) { // position ¹æ½ÄÀÎ °æ¿ì
+	if (s.find("=") == string::npos) { // position ë°©ì‹ì¸ ê²½ìš°
 		for (int a = 0; a < MAXARG; a++) {
 			if (argta[a].is_val_empty()) {
 				j = a;
@@ -170,7 +170,7 @@ void setargvalue(string s) { // argtab¿¡ value¸¦ ³Ö´Â ÇÔ¼ö
 			}
 		}
 		while (getline(iss, replacement[i], ',')) {
-			if (replacement[i].find("(") != string::npos) { // ¹è¿­·Î ÀÔ·Â¹Ş´Â °æ¿ì ¿¹¿ÜÃ³¸®
+			if (replacement[i].find("(") != string::npos) { // ë°°ì—´ë¡œ ì…ë ¥ë°›ëŠ” ê²½ìš° ì˜ˆì™¸ì²˜ë¦¬
 				while (1) {
 					temp = "";
 					getline(iss, temp, ',');
@@ -185,12 +185,12 @@ void setargvalue(string s) { // argtab¿¡ value¸¦ ³Ö´Â ÇÔ¼ö
 	}
 	else {
 		while (getline(iss, replacement[i], ',')) {
-			temp1 = replacement[i].substr(0, replacement[i].find("=")); // = À» ±âÁØÀ¸·Î ¹İÀ¸·Î °¡¸§
+			temp1 = replacement[i].substr(0, replacement[i].find("=")); // = ì„ ê¸°ì¤€ìœ¼ë¡œ ë°˜ìœ¼ë¡œ ê°€ë¦„
 			temp2 = "";
 			if (replacement[i].back() != '=') {
 				temp2= replacement[i].substr(replacement[i].find("=") + 1);
 				for (int a = 0; a < MAXARG; a++) {
-					if (argta[a].argument.find(temp1) != string::npos) { // temp1À» argument¿¡¼­ Ã£À¸¸é value¿¡ temp2 set
+					if (argta[a].argument.find(temp1) != string::npos) { // temp1ì„ argumentì—ì„œ ì°¾ìœ¼ë©´ valueì— temp2 set
 						argta[a].setvalue(temp2);
 					}
 				}
@@ -198,24 +198,24 @@ void setargvalue(string s) { // argtab¿¡ value¸¦ ³Ö´Â ÇÔ¼ö
 			else {
 				temp2 = " ";
 				for (int a = 0; a < MAXARG; a++) {
-					if (argta[a].argument.find(temp1) != string::npos) { // temp1À» argument¿¡¼­ Ã£À¸¸é value¿¡ temp2 set
+					if (argta[a].argument.find(temp1) != string::npos) { // temp1ì„ argumentì—ì„œ ì°¾ìœ¼ë©´ valueì— temp2 set
 						argta[a].setvalue(temp2);
 					}
 				}
 			}
 			i++;
 		}
-	} // keyword ¹æ½ÄÀÎ °æ¿ì
-	for (int i = 0; i < argend; i++) { // ÀÔ·Â¹ŞÁö ¾Ê¾ÒÀ» °æ¿ì °ø¹é Ã³¸®
+	} // keyword ë°©ì‹ì¸ ê²½ìš°
+	for (int i = 0; i < argend; i++) { // ì…ë ¥ë°›ì§€ ì•Šì•˜ì„ ê²½ìš° ê³µë°± ì²˜ë¦¬
 		if (argta[i].is_val_empty())
 			argta[i].setvalue(" ");
 	}
 }
-// keyword ¿Í positionÀ» ¼¯´Â °æ¿ì´Â ±¸ÇöÇÏÁö ¾Ê¾ÒÀ½
+// keyword ì™€ positionì„ ì„ëŠ” ê²½ìš°ëŠ” êµ¬í˜„í•˜ì§€ ì•Šì•˜ìŒ
 
-void uniqueval(int s, int e, int macronum, int level) { // operand ºÎºĞÀ» unique value·Î ¹Ù²Ù´Â ÇÔ¼ö
+void uniqueval(int s, int e, int macronum, int level) { // operand ë¶€ë¶„ì„ unique valueë¡œ ë°”ê¾¸ëŠ” í•¨ìˆ˜
 	string temp="&&";
-	temp[0] = (char)(96 + macronum); // unique labelÀ» À§ÇÔ
+	temp[0] = (char)(96 + macronum); // unique labelì„ ìœ„í•¨
 	temp[1] = (char)(96 + level);
 	for (int i = s; i < e; i++) {
 		for (int j = 0; j < backupindex; j++) {
@@ -229,7 +229,7 @@ void uniqueval(int s, int e, int macronum, int level) { // operand ºÎºĞÀ» unique
 	}
 }
 
-void substitute(string &s) { // argument¸¦ vaule·Î ¹Ù²Ù´Â ÇÔ¼ö
+void substitute(string &s) { // argumentë¥¼ vauleë¡œ ë°”ê¾¸ëŠ” í•¨ìˆ˜
 	string::size_type a;
 	for (int i = 0; i < argend; i++) {
 		string temp = argta[i].argument;
@@ -239,13 +239,13 @@ void substitute(string &s) { // argument¸¦ vaule·Î ¹Ù²Ù´Â ÇÔ¼ö
 				s.replace(s.find(temp), temp.length(), argta[i].value);
 			if (s.find("->") != string::npos) {
 				a = s.find("->");
-				s.erase(a, 2); // -> Á¦°Å
+				s.erase(a, 2); // -> ì œê±°
 			}
 		}
 	}
 }
 
-void setval(string s1, string s2) { // set ÀÏ ¶§ value ¼³Á¤ ¼ıÀÚ³ª º¯¼ö¸¸ ¹Ş´Â´Ù°í °¡Á¤
+void setval(string s1, string s2) { // set ì¼ ë•Œ value ì„¤ì • ìˆ«ìë‚˜ ë³€ìˆ˜ë§Œ ë°›ëŠ”ë‹¤ê³  ê°€ì •
 	for (int i = 0; i < argend; i++) {
 		if (argta[i].argument == s1) {
 			argta[i].setvalue(s2);
@@ -253,7 +253,7 @@ void setval(string s1, string s2) { // set ÀÏ ¶§ value ¼³Á¤ ¼ıÀÚ³ª º¯¼ö¸¸ ¹Ş´Â´Ù
 	}
 }
 
-bool condition(string s) { // if ¹®ÀÌ³ª while¹® ºñ±³
+bool condition(string s) { // if ë¬¸ì´ë‚˜ whileë¬¸ ë¹„êµ
 	stringstream ss(s);
 	string arg1;
 	string cond;
@@ -277,7 +277,7 @@ bool condition(string s) { // if ¹®ÀÌ³ª while¹® ºñ±³
 	if (arg2.back() == ')') {
 		arg2.pop_back();
 	}
-	if (cond == "lt") { // le¿Í ge´Â ±¸ÇöÇÏÁö ¾Ê°í lt¿Í gt´Â ¼ıÀÚÀÏ ¶§¸¸ ÀÛµ¿ÇÑ´Ù
+	if (cond == "lt") { // leì™€ geëŠ” êµ¬í˜„í•˜ì§€ ì•Šê³  ltì™€ gtëŠ” ìˆ«ìì¼ ë•Œë§Œ ì‘ë™í•œë‹¤
 		if (stoi(arg1) < stoi(arg2)) return true;
 		else return false;
 	}
@@ -305,25 +305,25 @@ void mgetline(int &index) { // getline
 	string tlabel;
 	string topcode;
 	string toperand;
-	if (expanding) { // È®Àå ÁßÀÏ °æ¿ì deftab¿¡¼­ ÀĞ¾î¿È
+	if (expanding) { // í™•ì¥ ì¤‘ì¼ ê²½ìš° deftabì—ì„œ ì½ì–´ì˜´
 		line = "";
 		tlabel = defta.mlabel[index];
 		topcode = defta.mopcode[index];
 		toperand = defta.moperand[index];
-		substitute(toperand); // ´ëÃ¼
-		if (topcode == "set") { // setÀÏ °æ¿ì value set
+		substitute(toperand); // ëŒ€ì²´
+		if (topcode == "set") { // setì¼ ê²½ìš° value set
 			set = true;
 			setval(tlabel, toperand);
 		}
-		if (topcode == "if") { //if¹®ÀÏ °æ¿ì
-			if (condition(toperand)) { // Á¶°ÇÀ» µûÁ®º¸°í
+		if (topcode == "if") { //ifë¬¸ì¼ ê²½ìš°
+			if (condition(toperand)) { // ì¡°ê±´ì„ ë”°ì ¸ë³´ê³ 
 				index++;
-				while (defta.mopcode[index] != "else" && defta.mopcode[index] != "endif") { // else³ª endif±îÁö
+				while (defta.mopcode[index] != "else" && defta.mopcode[index] != "endif") { // elseë‚˜ endifê¹Œì§€
 					mgetline(index);
 					processline();
 					index++;
 				}
-				if (defta.mopcode[index] == "else") { // Á¶°ÇÀÌ ¸Â¾ÒÀ¸¹Ç·Î elseÂÊÀº ÀÛµ¿ÇÏÁö ¾Ê´Â´Ù
+				if (defta.mopcode[index] == "else") { // ì¡°ê±´ì´ ë§ì•˜ìœ¼ë¯€ë¡œ elseìª½ì€ ì‘ë™í•˜ì§€ ì•ŠëŠ”ë‹¤
 					while (defta.mopcode[index] != "endif") {
 						index++;
 					}
@@ -333,7 +333,7 @@ void mgetline(int &index) { // getline
 				while (defta.mopcode[index]!="else"&&defta.mopcode[index] != "endif") {
 					index++;
 				}
-				if (defta.mopcode[index] == "else") { // Æ²¸± °æ¿ì elseÂÊÀ» ½ÇÇà
+				if (defta.mopcode[index] == "else") { // í‹€ë¦´ ê²½ìš° elseìª½ì„ ì‹¤í–‰
 					index++;
 					while (defta.mopcode[index] != "endif") {
 						mgetline(index);
@@ -342,58 +342,58 @@ void mgetline(int &index) { // getline
 					}
 				}
 			}
-			set = true; // if¹® Ãâ·Â ¿¹¿ÜÃ³¸®
+			set = true; // ifë¬¸ ì¶œë ¥ ì˜ˆì™¸ì²˜ë¦¬
 		}
 		/*
-		LOOP´Â ±¸ÇöÇÏ¿´À¸³ª ¹è¿­°ú »çÄ¢¿¬»êÀÌ ¹Ì±¸Çö »óÅÂÀÌ±â ¶§¹®¿¡
-		½ÇÇà °úÁ¤Àº Á¸ÀçÇÏÁö ¾Ê´Â´Ù.
+		LOOPëŠ” êµ¬í˜„í•˜ì˜€ìœ¼ë‚˜ ë°°ì—´ê³¼ ì‚¬ì¹™ì—°ì‚°ì´ ë¯¸êµ¬í˜„ ìƒíƒœì´ê¸° ë•Œë¬¸ì—
+		ì‹¤í–‰ ê³¼ì •ì€ ì¡´ì¬í•˜ì§€ ì•ŠëŠ”ë‹¤.
 		*/
 		else if (topcode == "while") { 
 			int b_index = index;
-			if (condition(toperand)) { // Á¶°ÇÀ» ¹Ì¸® µûÁ®º¸°í
-				while (condition(toperand)) { // ¹İº¹
+			if (condition(toperand)) { // ì¡°ê±´ì„ ë¯¸ë¦¬ ë”°ì ¸ë³´ê³ 
+				while (condition(toperand)) { // ë°˜ë³µ
 					index++;
-					while (defta.mopcode[index] != "endw") { // while¹®ÀÌ ³ª°¡Áú ¶§±îÁö °è¼Ó ¹İº¹
+					while (defta.mopcode[index] != "endw") { // whileë¬¸ì´ ë‚˜ê°€ì§ˆ ë•Œê¹Œì§€ ê³„ì† ë°˜ë³µ
 						mgetline(index);
 						processline();
 						index++;
 					}
-					index = b_index; // while¹® ½ÃÀÛ index
+					index = b_index; // whileë¬¸ ì‹œì‘ index
 				}
 				
 			}
-			else { // ¾Æ´Ò °æ¿ì while¹® ³Ñ±â±â À§ÇØ ÁÙ³Ñ±è
+			else { // ì•„ë‹ ê²½ìš° whileë¬¸ ë„˜ê¸°ê¸° ìœ„í•´ ì¤„ë„˜ê¹€
 				while (defta.mopcode[index] != "endw") {
 					index++;
 				}
 			}
-			set = true; // while¹® Ãâ·Â ¿¹¿ÜÃ³¸®
+			set = true; // whileë¬¸ ì¶œë ¥ ì˜ˆì™¸ì²˜ë¦¬
 		}
-		line = tlabel + " " +  topcode + " " + toperand; // processline ÇÔ¼ö¿¡¼­ Ãâ·ÂÇÏ±â À§ÇØ line¿¡ append
+		line = tlabel + " " +  topcode + " " + toperand; // processline í•¨ìˆ˜ì—ì„œ ì¶œë ¥í•˜ê¸° ìœ„í•´ lineì— append
 	}
 	else {
-		getline(inpf, line);//ÇÑ ÁÙ¾¿ ÀĞ¾î°£´Ù
-		stringstream ss(line);//ÂÉ°³±â À§ÇØ stringstream ÀÌ¿ë
-		s = line.front();//labelÀÌ ¾ø´Â °ÍÀ» ±¸ºĞÇÏ±â À§ÇÔ
-		if (s.compare(" ") == 0) {//¶óº§ÀÌ ¾ø´Ù¸é
-			label[index] = s;//°ø¹é ÀúÀå
+		getline(inpf, line);//í•œ ì¤„ì”© ì½ì–´ê°„ë‹¤
+		stringstream ss(line);//ìª¼ê°œê¸° ìœ„í•´ stringstream ì´ìš©
+		s = line.front();//labelì´ ì—†ëŠ” ê²ƒì„ êµ¬ë¶„í•˜ê¸° ìœ„í•¨
+		if (s.compare(" ") == 0) {//ë¼ë²¨ì´ ì—†ë‹¤ë©´
+			label[index] = s;//ê³µë°± ì €ì¥
 			ss >> opcode[index];
 			ss >> operand[index];
 			ss >> temp;
 			while (!temp.empty()||temp!="") {
 				operand[index].append(" ");
-				operand[index].append(temp); // ÄŞ¸¶ µÚ¿¡ ¶ç¾î¾²±â°¡ ÀÖÀ» °æ¿ì Ã³¸®
+				operand[index].append(temp); // ì½¤ë§ˆ ë’¤ì— ë„ì–´ì“°ê¸°ê°€ ìˆì„ ê²½ìš° ì²˜ë¦¬
 				temp = "";
 				ss >> temp;
 			}
 		}
-		else {//¶óº§ÀÌ ÀÖ´Ù¸é ¼øÂ÷ÀûÀ¸·Î ÀúÀå
+		else {//ë¼ë²¨ì´ ìˆë‹¤ë©´ ìˆœì°¨ì ìœ¼ë¡œ ì €ì¥
 			ss >> label[index];
 			ss >> opcode[index];
 			ss >> operand[index];
 			ss >> temp;
 			while (!temp.empty()||temp!="") {
-				operand[index].append(temp); // ÄŞ¸¶ µÚ¿¡ ¶ç¾î¾²±â°¡ ÀÖÀ» °æ¿ì Ã³¸®
+				operand[index].append(temp); // ì½¤ë§ˆ ë’¤ì— ë„ì–´ì“°ê¸°ê°€ ìˆì„ ê²½ìš° ì²˜ë¦¬
 				operand[index].append(" ");
 				temp = "";
 				ss >> temp;
@@ -402,15 +402,15 @@ void mgetline(int &index) { // getline
 	}
 }
 
-void processline() { // È®Àå, Á¤ÀÇ·Î ³Ñ±â°Å³ª Ãâ·ÂÇÏ´Â ÇÔ¼ö
+void processline() { // í™•ì¥, ì •ì˜ë¡œ ë„˜ê¸°ê±°ë‚˜ ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜
 	int s, e;
-	if (findnam(opcode[index], s, e)) { // macro ÀÌ¸§°ú ÀÏÄ¡ÇÒ °æ¿ì expand
+	if (findnam(opcode[index], s, e)) { // macro ì´ë¦„ê³¼ ì¼ì¹˜í•  ê²½ìš° expand
 		expand(s, e);
 	}
-	else if (opcode[index] == "macro") { // opcode==macroÀÏ °æ¿ì Á¤ÀÇ
+	else if (opcode[index] == "macro") { // opcode==macroì¼ ê²½ìš° ì •ì˜
 		define();
 	}
-	else { // Ãâ·Â
+	else { // ì¶œë ¥
 		if (!set) {
 			outpf << line << endl;
 			cout << line << endl;
@@ -419,7 +419,7 @@ void processline() { // È®Àå, Á¤ÀÇ·Î ³Ñ±â°Å³ª Ãâ·ÂÇÏ´Â ÇÔ¼ö
 	}
 }
 
-void define() { // ¸ÅÅ©·Î Á¤ÀÇ ÇÔ¼ö
+void define() { // ë§¤í¬ë¡œ ì •ì˜ í•¨ìˆ˜
 	int startindex[MAXSIZE] = { 0 };
 	int endindex[MAXSIZE] = { 0 };
 	int level = 1;
@@ -428,14 +428,14 @@ void define() { // ¸ÅÅ©·Î Á¤ÀÇ ÇÔ¼ö
 	insertnam(label[index]);
 	defta.setline(line, label[index], opcode[index], operand[index], defindex);
 	defindex++;
-	setargtab(operand[index]); // argument ¼³Á¤
+	setargtab(operand[index]); // argument ì„¤ì •
 	while (level > 0) {
 		index++;
 		mgetline(index);
-		//if not comment line (±¸Çö X)
+		//if not comment line (êµ¬í˜„ X)
 		if (opcode[index] != "set") {
 			string temp = "&&";
-			temp[0] = (char)(96 + macronum); // unique labelÀ» À§ÇÔ
+			temp[0] = (char)(96 + macronum); // unique labelì„ ìœ„í•¨
 			temp[1] = (char)(96 + level);
 			if (!label[index].empty() && label[index] != " ") {
 				backup[backupindex++] = label[index];
@@ -447,7 +447,7 @@ void define() { // ¸ÅÅ©·Î Á¤ÀÇ ÇÔ¼ö
 		}
 		defta.setline(line, label[index], opcode[index], operand[index], defindex);
 		defindex++;
-		if (opcode[index] == "set") { // setÀÏ °æ¿ì argtab¿¡ ³Ö´Â´Ù
+		if (opcode[index] == "set") { // setì¼ ê²½ìš° argtabì— ë„£ëŠ”ë‹¤
 			argta[argindex].setarg(label[index]);
 			argindex++;
 			argend++;
@@ -458,21 +458,21 @@ void define() { // ¸ÅÅ©·Î Á¤ÀÇ ÇÔ¼ö
 		}
 		else if (opcode[index] == "mend") {
 			endindex[level] = index;
-			insertindex(label[startindex[level]], startindex[level], endindex[level]); // namtabÀÇ index¸¦ ¼³Á¤
-			uniqueval(startindex[level], endindex[level], macronum, level); // unique labelÀ» operand ºÎºĞµµ Ã³¸®
+			insertindex(label[startindex[level]], startindex[level], endindex[level]); // namtabì˜ indexë¥¼ ì„¤ì •
+			uniqueval(startindex[level], endindex[level], macronum, level); // unique labelì„ operand ë¶€ë¶„ë„ ì²˜ë¦¬
 			index++;
 			level--;
 		}
 	}
 }
 
-void expand(int s, int e) { // È®Àå ÇÔ¼ö
-	expanding = true; // È®Àå »óÅÂ
-	setargvalue(operand[index]); // value°ªÀ» ¼³Á¤
+void expand(int s, int e) { // í™•ì¥ í•¨ìˆ˜
+	expanding = true; // í™•ì¥ ìƒíƒœ
+	setargvalue(operand[index]); // valueê°’ì„ ì„¤ì •
 	string temp;
 	temp[0] = (char)(65);
-	string back = label[index]; // ±âÁ¸ÀÇ label ÀúÀå
-	if (!label[index].empty() && label[index] != " ") // ºñ¾îÀÖÁö ¾ÊÀº °æ¿ì unique label
+	string back = label[index]; // ê¸°ì¡´ì˜ label ì €ì¥
+	if (!label[index].empty() && label[index] != " ") // ë¹„ì–´ìˆì§€ ì•Šì€ ê²½ìš° unique label
 		label[index].insert(0, ".");
 	outpf << label[index] << " " << defta.mlabel[s] << " " << operand[index] << endl;
 	if (!label[index].empty() && label[index] != " ")
@@ -481,7 +481,7 @@ void expand(int s, int e) { // È®Àå ÇÔ¼ö
 	if (!label[index].empty() && label[index] != " ")
 		cout << back;
 	index++;
-	for( int i=s+1; i<e; i++){ // ¼±¾ğºÎ°¡ ¾Æ´Ñ ³ª¸ÓÁö lineµµ Ãâ·Â
+	for( int i=s+1; i<e; i++){ // ì„ ì–¸ë¶€ê°€ ì•„ë‹Œ ë‚˜ë¨¸ì§€ lineë„ ì¶œë ¥
 		mgetline(i);
 		processline();
 	}
