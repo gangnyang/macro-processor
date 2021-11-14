@@ -1,5 +1,5 @@
 /*
-2020111983 Àüµ¿¿ø ¸ÅÅ©·Î ÇÁ·Î¼¼¼­ Å×ÀÌºí cpp ÆÄÀÏ
+ë§¤í¬ë¡œ í”„ë¡œì„¸ì„œ í…Œì´ë¸” cpp íŒŒì¼
 */
 #include <iostream>
 #include <fstream>
@@ -11,7 +11,7 @@
 
 using namespace std;
 
-class NAMTAB { // ÇØ½Ã Å×ÀÌºí ÇüÅÂÀÇ NAMTAB
+class NAMTAB { // í•´ì‹œ í…Œì´ë¸” í˜•íƒœì˜ NAMTAB
 public:
 	void setname(string name) {
 		this->name = name;
@@ -26,7 +26,7 @@ public:
 	NAMTAB* next = NULL;
 };
 
-class DEFTAB { // ¹è¿­ ¹æ½ÄÀÇ DEFTAB
+class DEFTAB { // ë°°ì—´ ë°©ì‹ì˜ DEFTAB
 public:
 	void setline(string mline, string mlabel, string mopcode, string moperand, int index) {
 		this->mline[index] = mline;
@@ -40,7 +40,7 @@ public:
 	string moperand[MAXLINE];
 };
 
-class ARGTAB { // ¸®½ºÆ® ¹æ½ÄÀÇ ARGTAB
+class ARGTAB { // ë¦¬ìŠ¤íŠ¸ ë°©ì‹ì˜ ARGTAB
 public:
 	void setarg(string arg) {
 		this->argument = arg;
